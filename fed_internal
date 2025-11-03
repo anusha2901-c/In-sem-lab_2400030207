@@ -1,0 +1,77 @@
+import React, { useState } from "react";
+
+const SortableTable = () => {
+  // Predefined array of employee data
+  const [data, setData] = useState([
+    { name: "Anusha", department: "HR", salary: 45000 },
+    { name: "Rahul", department: "IT", salary: 60000 },
+    { name: "Sneha", department: "Finance", salary: 55000 },
+    { name: "Vikram", department: "Marketing", salary: 48000 },
+    { name: "Kiran", department: "IT", salary: 62000 },
+  ]);
+
+  // State to track which column is sorted and order
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+
+  // Sort handler
+  const handleSort = (key) => {
+    let direction = "asc";
+    if (sortConfig.key === key && sortConfig.direction === "asc") {
+      direction = "desc";
+    }
+    const sortedData = [...data].sort((a, b) => {
+      if (a[key] < b[key]) return direction === "asc" ? -1 : 1;
+      if (a[key] > b[key]) return direction === "asc" ? 1 : -1;
+      return 0;
+    });
+    setData(sortedData);
+    setSortConfig({ key, direction });
+  };
+
+  return (
+    <div className="p-6">
+      <h2 className="text-2xl font-bold mb-4 text-center">Employee Table</h2>
+      <table className="w-full border border-gray-400 border-collapse">
+        <thead>
+          <tr className="bg-gray-200">
+            <th
+              className="border border-gray-400 px-4 py-2 cursor-pointer"
+              onClick={() => handleSort("name")}
+            >
+              Name {sortConfig.key === "name" ? (sortConfig.direction === "asc" ? "▲" : "▼") : ""}
+            </th>
+            <th
+              className="border border-gray-400 px-4 py-2 cursor-pointer"
+              onClick={() => handleSort("department")}
+            >
+              Department{" "}
+              {sortConfig.key === "department" ? (sortConfig.direction === "asc" ? "▲" : "▼") : ""}
+            </th>
+            <th
+              className="border border-gray-400 px-4 py-2 cursor-pointer"
+              onClick={() => handleSort("salary")}
+            >
+              Salary {sortConfig.key === "salary" ? (sortConfig.direction === "asc" ? "▲" : "▼") : ""}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((emp, index) => (
+            <tr
+              key={index}
+              className={`${
+                index % 2 === 0 ? "bg-white" : "bg-gray-100"
+              } hover:bg-blue-100 transition duration-200`}
+            >
+              <td className="border border-gray-400 px-4 py-2">{emp.name}</td>
+              <td className="border border-gray-400 px-4 py-2">{emp.department}</td>
+              <td className="border border-gray-400 px-4 py-2">₹{emp.salary}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+export default SortableTable;
